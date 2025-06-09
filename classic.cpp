@@ -4,7 +4,7 @@
 
 bool Classic::setData(std::istream& in) {
     in >> stock;
-    in.ignore(); // skip comma
+    in.ignore(); 
     getline(in, director, ',');
     director = director.substr(1);
     getline(in, title, ',');

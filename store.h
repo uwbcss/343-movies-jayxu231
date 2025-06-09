@@ -19,10 +19,13 @@ public:
     void displayInventory() const;
     void displayCustomerHistory(int customerID) const;
 
+    Customer* getCustomer(int customerID) const;
+    Movie* findMovie(const Movie* target, char genreCode) const;
+
 private:
     HashTable customers;
 
-    // Inventories by genre code
+
     std::vector<Movie*> comedyInventory;
     std::vector<Movie*> dramaInventory;
     std::vector<Movie*> classicInventory;

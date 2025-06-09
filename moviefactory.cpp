@@ -7,7 +7,7 @@ std::map<char, Movie*> MovieFactory::registry;
 
 Movie* MovieFactory::createMovie(char code) {
     if (registry.find(code) != registry.end()) {
-        return registry[code]->create();  // clone the prototype
+        return registry[code]->create();  
     }
     return nullptr;
 }

@@ -32,7 +32,7 @@ void Store::loadMovies(const std::string& filename) {
         std::istringstream ss(line);
         char genreCode;
         ss >> genreCode;
-        ss.ignore(); // skip comma
+        ss.ignore();
 
         Movie* movie = MovieFactory::createMovie(genreCode);
         if (!movie) {
@@ -89,15 +89,6 @@ void Store::processCommands(const std::string& filename) {
     std::ifstream file(filename);
     std::string line;
     while (getline(file, line)) {
-        // Placeholder for command parsing
-        std::cout << "Processing: " << line << std::endl;
-        // In full implementation, use CommandFactory here
-    }
-}
-void Store::processCommands(const std::string& filename) {
-    std::ifstream file(filename);
-    std::string line;
-    while (getline(file, line)) {
         std::istringstream ss(line);
         char commandCode;
         ss >> commandCode;
@@ -116,4 +107,24 @@ void Store::processCommands(const std::string& filename) {
         }
         delete cmd;
     }
+}
+Customer* Store::getCustomer(int customerID) const {
+    return customers.retrieve(customerID);
+}
+
+Movie* Store::findMovie(const Movie* target, char genreCode) const {
+    const std::vector<Movie*>* inventory = nullptr;
+    switch (genreCode) {
+        case 'F': inventory = &comedyInventory; break;
+        case 'D': inventory = &dramaInventory; break;
+        case 'C': inventory = &classicInventory; break;
+        default: return nullptr;
+    }
+
+    for (Movie* m : *inventory) {
+        if (m->getKey() == target->getKey()) {
+            return m;
+        }
+    }
+    return nullptr;
 }

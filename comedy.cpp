@@ -1,17 +1,14 @@
-// ==============================
-// comedy.cpp
-// ==============================
 #include "comedy.h"
 #include <sstream>
 #include <iomanip>
 
 bool Comedy::setData(std::istream& in) {
     in >> stock;
-    in.ignore(); // skip comma
+    in.ignore(); 
     getline(in, director, ',');
-    director = director.substr(1); // skip space
+    director = director.substr(1);
     getline(in, title, ',');
-    title = title.substr(1); // skip space
+    title = title.substr(1); 
     in >> year;
     return !director.empty() && !title.empty() && year > 0;
 }

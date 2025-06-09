@@ -1,30 +1,30 @@
-#include "borrowcommand.h"
-#include "borrow.h"
+#include "returncommand.h"
+#include "return.h"
 #include "moviefactory.h"
 #include "commandfactory.h"
 #include <sstream>
 #include <iostream>
 
 namespace {
-    struct RegisterBorrow {
-        RegisterBorrow() {
-            CommandFactory::registerCommand('B', new BorrowCommand());
+    struct RegisterReturn {
+        RegisterReturn() {
+            CommandFactory::registerCommand('R', new ReturnCommand());
         }
     };
-    static RegisterBorrow registerBorrow;
+    static RegisterReturn registerReturn;
 }
 
 
-BorrowCommand::BorrowCommand() {}
+ReturnCommand::ReturnCommand() {}
 
-bool BorrowCommand::setData(const std::string& line) {
+bool ReturnCommand::setData(const std::string& line) {
     std::istringstream ss(line);
     ss >> customerID >> mediaType >> genreCode;
     getline(ss, movieData);
     return true;
 }
 
-void BorrowCommand::execute(Store& store) {
+void ReturnCommand::execute(Store& store) {
     Customer* cust = store.getCustomer(customerID);
     if (!cust) {
         std::cerr << "Invalid customer ID: " << customerID << std::endl;
@@ -39,7 +39,7 @@ void BorrowCommand::execute(Store& store) {
 
     std::istringstream ss(movieData);
     if (!temp->setData(ss)) {
-        std::cerr << "Bad movie data in borrow command\n";
+        std::cerr << "Bad movie data in return command\n";
         delete temp;
         return;
     }
@@ -51,17 +51,12 @@ void BorrowCommand::execute(Store& store) {
         return;
     }
 
-    if (actual->getStock() == 0) {
-        std::cerr << "Out of stock\n";
-        return;
-    }
-
-    actual->decreaseStock();
-    Borrow* t = new Borrow();
+    actual->increaseStock();
+    Return* t = new Return();
     t->setData(actual, customerID);
     cust->addTransaction(t);
 }
 
-Command* BorrowCommand::create() const {
-    return new BorrowCommand();
+Command* ReturnCommand::create() const {
+    return new ReturnCommand();
 }
